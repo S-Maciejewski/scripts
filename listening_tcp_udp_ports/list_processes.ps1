@@ -1,1 +1,1 @@
-get-nettcpconnection | Select-Object local*, remote*, state, @{Name = "ProcessName"; Expression = { (Get-Process -Id $_.OwningProcess).ProcessName } }
+get-nettcpconnection | Format-Table -Autosize local*, remote*, state, @{Name = "ProcessID"; expression = { $_.OwningProcess } }, @{Name = "ProcessName"; Expression = { (Get-Process -Id $_.OwningProcess).ProcessName } }, @{Name = "StartTime"; Expression = { (Get-Process -Id $_.OwningProcess).StartTime } }
