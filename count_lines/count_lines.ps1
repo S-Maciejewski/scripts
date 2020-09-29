@@ -9,13 +9,17 @@ $pattern = Read-Host 'Please enter a pattern for file names (i.e. records_*.csv)
 # $recursive = 'r'
 # $pattern = '*.txt'
 
-Set-Location $(If ($directory) { $directory } Else { '.' })
+$directory = $(If ($directory) { $directory } Else { '.' })
+Set-Location $directory
+$size = 0
 
 if ($recursive -eq 'r' -or $recursive -eq 'R') {
-    Get-ChildItem -Recurse $pattern | Get-Content | Measure-Object -Line | Select-Object Lines
+    $size = Get-ChildItem -Recurse $pattern | Measure-Object -property length -sum | Select-Object Sum
+    Get-ChildItem -Recurse $pattern | Get-Content | Measure-Object -Line | Select-Object Lines, @{Name = "Size(KB)"; expression = {'{0:0.###}' -f  ($size.Sum / 1024)}}
 }
 else {
-    Get-ChildItem $pattern | Where-Object { !$_.PSIsContainer } | Get-Content | Measure-Object -Line | Select-Object Lines
+    $size = Get-ChildItem $pattern | Where-Object { !$_.PSIsContainer } | Measure-Object -property length -sum | Select-Object Sum
+    Get-ChildItem $pattern | Where-Object { !$_.PSIsContainer } | Get-Content | Measure-Object -Line | Select-Object Lines, @{Name = "Size(KB)"; expression = {'{0:0.###}' -f  ($size.Sum / 1024)}}
 }
 
 Set-Location $startedFrom

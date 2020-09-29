@@ -1,6 +1,6 @@
 # Count lines in files in a directory (or directories recursively)
 
-This script counts lines in files matching given pattern.
+This script counts lines in files matching given pattern. It outputs the number of lines, as well as total size of all files taken into account.
 Lines in files can be counted both in a single dictionary and recursively in a tree of dictionaries.
 
 ## Use
